@@ -1,6 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { SBSocket } from './socket';
-import { BalanceResponse, BuyInfoResponse, BuyPayload, BuyResponse, DatePaylod, GamePayload, HistoryResponse, Item, PriceItem, PriceResponse, SBApiConfig, SearchResponse, StatusResponse } from './types';
+import { BalanceResponse, BuyInfoResponse, BuyPayload, BuyResponse, DatePayload, GamePayload, HistoryResponse, Item, PriceItem, PriceResponse, SBApiConfig, SearchResponse, StatusResponse } from './types';
 export declare class SBApi {
     protected readonly config: SBApiConfig;
     protected readonly http: AxiosInstance;
@@ -52,10 +52,10 @@ export declare class SBApi {
     /**
      *
      * @see https://skinsback.com/profile.php?act=api&item=market_history
-     * @param {payload: DatePaylod & { start_from?: number; }} payload
+     * @param {payload: DatePayload & { start_from?: number; }} payload
      * @returns {Promise<HistoryResponse>}
      */
-    history(payload: DatePaylod & {
+    history(payload: DatePayload & {
         start_from?: number;
     }): Promise<HistoryResponse>;
 }

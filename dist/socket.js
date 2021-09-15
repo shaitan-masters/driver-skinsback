@@ -18,7 +18,9 @@ class SBSocket extends events_1.Events {
         AUTH_FAILED: 'auth_failed',
         BALANCE_CHANGE: 'balance_change',
         BUY_ITEM: 'buy_item',
-        STATUS_CHANGE: 'status_change'
+        STATUS_CHANGE: 'status_change',
+        CONNECTED: 'connected',
+        DISCONNECTED: 'disconnected'
     };
     constructor(config) {
         super();
@@ -40,7 +42,7 @@ class SBSocket extends events_1.Events {
         })}`);
         this.socket.on('open', () => {
             this.state.connected = true;
-            this.emit('connected');
+            this.emit(this.EVENTS.CONNECTED);
         });
         this.socket.on('message', (msg) => {
             const parsed = this.parse(msg);
@@ -53,7 +55,6 @@ class SBSocket extends events_1.Events {
                     case this.EVENTS.AUTH_FAILED:
                         this.state.authed = false;
                         this.timers.timeouts.push(setTimeout(() => {
-                            this.emit('reconnecting');
                             this.connect();
                         }, this.config.socket?.options?.reconnectionTimeout || 5000));
                         return;
@@ -64,7 +65,7 @@ class SBSocket extends events_1.Events {
             parsed.data && this.emit(parsed.event, parsed.data);
         });
         this.socket.on('close', () => {
-            this.emit('disconnected');
+            this.emit(this.EVENTS.DISCONNECTED);
             this.connect();
         });
         this.timers.timeouts.push(setTimeout(() => {

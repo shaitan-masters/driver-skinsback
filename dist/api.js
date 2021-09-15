@@ -110,7 +110,7 @@ class SBApi {
     /**
      *
      * @see https://skinsback.com/profile.php?act=api&item=market_history
-     * @param {payload: DatePaylod & { start_from?: number; }} payload
+     * @param {payload: DatePayload & { start_from?: number; }} payload
      * @returns {Promise<HistoryResponse>}
      */
     async history(payload) {

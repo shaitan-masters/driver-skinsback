@@ -30,7 +30,7 @@ export interface Currencies {
     readonly cny: string;
     readonly [key: string]: string;
 }
-export interface DatePaylod {
+export interface DatePayload {
     readonly starting: number;
     readonly ending: number;
 }

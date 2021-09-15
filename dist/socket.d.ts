@@ -10,7 +10,7 @@ export declare class SBSocket extends Events {
         timeouts: NodeJS.Timeout[];
     };
     EVENTS: {
-        [event in 'AUTH_SUCCESS' | 'AUTH_FAILED' | 'BALANCE_CHANGE' | 'BUY_ITEM' | 'STATUS_CHANGE']: SBSocketEventName;
+        [event in 'AUTH_SUCCESS' | 'AUTH_FAILED' | 'BALANCE_CHANGE' | 'BUY_ITEM' | 'STATUS_CHANGE' | 'CONNECTED' | 'DISCONNECTED']: SBSocketEventName | 'connected' | 'disconnected';
     };
     constructor(config: SBApiConfig);
     protected purgeTimers(): void;
