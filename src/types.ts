@@ -1,12 +1,12 @@
 export interface SBApiConfig {
-	readonly endpoint: string;
+	readonly endpoint?: string;
 	readonly token: string;
-	readonly botId: number;
+	readonly shopId: number;
 	readonly socket?: SBSocketConfig;
 }
 
 export interface SBSocketConfig {
-	readonly endpoint: string;
+	readonly endpoint?: string;
 	readonly options?: {
 		readonly reconnectionTimeout: number;
 	};
@@ -43,7 +43,7 @@ export interface DatePayload {
 }
 
 export interface GamePayload {
-	readonly game: 'dota2' | 'csgo';
+	readonly game?: 'dota2' | 'csgo';
 }
 
 export interface SearchResponse extends BaseResponse {
@@ -79,16 +79,14 @@ export type OfferStatus = 'creating_trade'
 	| 'user_not_tradable'
 	| 'trade_create_error';
 
-
 export interface BuyResponse extends BaseResponse {
 	readonly item: Item;
 	readonly buy_id: number;
-	readonly offer_status: Extract<OfferStatus, 'creating_trade'>;
+	readonly offer_status: OfferStatus;
 	readonly balance_debited_sum: number;
 }
 
-
-interface BaseBuyPayload {
+export interface BaseBuyPayload {
 	readonly partner: string;
 	readonly token: string;
 	readonly max_price?: number;
@@ -115,6 +113,10 @@ export interface BuyInfoResponse extends BaseResponse {
 	readonly date: string;
 	readonly balance_debited_sum: string;
 	readonly tradeofferid: string;
+}
+
+export interface MultiBuyInfoResponse extends BaseResponse {
+	readonly items: Omit<BuyInfoResponse, 'status'>[];
 }
 
 export interface HistoryResponse extends BaseResponse {

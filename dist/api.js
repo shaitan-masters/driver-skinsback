@@ -7,6 +7,7 @@ exports.SBApi = void 0;
 const crypto_1 = __importDefault(require("crypto"));
 const axios_1 = __importDefault(require("axios"));
 const socket_1 = require("./socket");
+const constants_1 = require("./constants");
 class SBApi {
     config;
     http;
@@ -19,7 +20,7 @@ class SBApi {
         }
     }
     configureAxios(axios) {
-        axios.defaults.baseURL = this.config.endpoint;
+        axios.defaults.baseURL = this.config.endpoint || constants_1.ENDPOINT;
         axios.interceptors.response.use(response => {
             const data = response.data;
             if ('status' in data && data.status === 'error')
@@ -29,7 +30,7 @@ class SBApi {
         axios.interceptors.request.use(request => {
             request.data = this.buildParams({
                 ...request.data,
-                shopid: this.config.botId
+                shopid: this.config.shopId
             });
             return request;
         });
@@ -42,7 +43,7 @@ class SBApi {
             .forEach((key) => {
             if (key === 'sign')
                 return;
-            if (typeof key === 'object')
+            if (typeof params[key] === 'object')
                 return;
             paramsString += '' + key + ':' + params[key] + ';';
         });
@@ -76,7 +77,7 @@ class SBApi {
      * @param payload
      * @returns {Promise<PriceResponse<Item | PriceItem>>}
      */
-    async prices(payload = { game: 'csgo' }) {
+    async prices(payload = constants_1.DEFAULT_GAME) {
         return this.http.post('', { method: 'market_pricelist', ...payload });
     }
     /**
@@ -86,7 +87,7 @@ class SBApi {
      * @returns {Promise<SearchResponse>}
      */
     async search(payload) {
-        return this.http.post('', { method: 'market_search', ...payload });
+        return this.http.post('', { method: 'market_search', ...payload, ...payload.game && constants_1.DEFAULT_GAME });
     }
     /**
      *

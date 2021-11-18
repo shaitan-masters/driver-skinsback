@@ -8,6 +8,7 @@ import {
 	SocketState,
 	SBSocketEventName
 } from './types';
+import {WS_ENDPOINT} from './constants';
 
 
 export class SBSocket extends Events {
@@ -51,10 +52,10 @@ export class SBSocket extends Events {
 		this.purgeTimers();
 		this.state = {connected: false, authed: false};
 
-		this.socket = new WS(`${this.config.socket?.endpoint}?${stringify({
-			shopid   : this.config.botId,
+		this.socket = new WS(`${this.config.socket?.endpoint || WS_ENDPOINT}?${stringify({
+			shopid   : this.config.shopId,
 			signature: crypto.createHash('md5')
-			                 .update(`${this.config.botId}${this.config.token}`)
+			                 .update(`${this.config.shopId}${this.config.token}`)
 			                 .digest('hex')
 		})}`);
 

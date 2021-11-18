@@ -10,12 +10,14 @@ import {
 	GamePayload,
 	HistoryResponse,
 	Item,
+	MultiBuyInfoResponse,
 	PriceItem,
 	PriceResponse,
 	SBApiConfig,
 	SearchResponse,
 	StatusResponse
 } from './types';
+import { DEFAULT_GAME, ENDPOINT } from './constants';
 
 
 export class SBApi {
@@ -34,17 +36,17 @@ export class SBApi {
 	}
 
 	protected configureAxios(axios: AxiosInstance): AxiosInstance {
-		axios.defaults.baseURL = this.config.endpoint;
+		axios.defaults.baseURL = this.config.endpoint || ENDPOINT;
 		axios.interceptors.response.use(response => {
 			const data = response.data;
 			if ('status' in data && data.status === 'error') throw new Error(JSON.stringify(data));
-
+  
 			return data;
 		});
 		axios.interceptors.request.use(request => {
 			request.data = this.buildParams({
 				...request.data,
-				shopid: this.config.botId
+				shopid: this.config.shopId
 			});
 
 			return request;
@@ -60,7 +62,7 @@ export class SBApi {
 		      .sort()
 		      .forEach((key: string): void => {
 			      if (key === 'sign') return;
-			      if (typeof key === 'object') return;
+			      if (typeof params[key] === 'object') return;
 
 			      paramsString += '' + key + ':' + params[key] + ';';
 		      });
@@ -102,7 +104,7 @@ export class SBApi {
 	 * @param payload
 	 * @returns {Promise<PriceResponse<Item | PriceItem>>}
 	 */
-	public async prices(payload: GamePayload | GamePayload & { full: 1; } = {game: 'csgo'}): Promise<PriceResponse<Item | PriceItem>> {
+	public async prices(payload: GamePayload | GamePayload & { full: 1; } = DEFAULT_GAME): Promise<PriceResponse<Item | PriceItem>> {
 		return this.http.post('', {method: 'market_pricelist', ...payload});
 	}
 
@@ -116,7 +118,7 @@ export class SBApi {
 	 * @returns {Promise<SearchResponse>}
 	 */
 	public async search(payload: GamePayload & { name: string; } | GamePayload & { names: string[]; }): Promise<SearchResponse> {
-		return this.http.post('', {method: 'market_search', ...payload});
+		return this.http.post('', {method: 'market_search', ...payload, ...payload.game && DEFAULT_GAME});
 	}
 
 	/**
@@ -130,8 +132,8 @@ export class SBApi {
 	}
 
 	public async buyInfo(payload: { buy_id: number; }): Promise<BuyInfoResponse>;
-	public async buyInfo(payload: { buy_ids: number[]; }): Promise<BuyInfoResponse>;
-	public async buyInfo(payload: { custom_ids: number[]; }): Promise<BuyInfoResponse>;
+	public async buyInfo(payload: { buy_ids: number[]; }): Promise<MultiBuyInfoResponse>;
+	public async buyInfo(payload: { custom_ids: number[]; }): Promise<MultiBuyInfoResponse>;
 
 	/**
 	 *
@@ -140,7 +142,7 @@ export class SBApi {
 	 * @description Написать в службу поддержки? - дичь с множественными buy_ids & custom_ids
 	 * @returns {Promise<BuyInfoResponse>}
 	 */
-	public async buyInfo(payload: { buy_id: number } | { buy_ids: number[] } | { custom_ids: number[] }): Promise<BuyInfoResponse> {
+	public async buyInfo(payload: { buy_id: number } | { buy_ids: number[] } | { custom_ids: number[] }): Promise<BuyInfoResponse | MultiBuyInfoResponse> {
 		return this.http.post('', {method: 'market_getinfo', ...payload});
 	}
 

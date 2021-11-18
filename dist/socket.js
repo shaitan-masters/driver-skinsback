@@ -8,6 +8,7 @@ const ws_1 = __importDefault(require("ws"));
 const events_1 = require("@osmium/events");
 const querystring_1 = require("querystring");
 const crypto_1 = __importDefault(require("crypto"));
+const constants_1 = require("./constants");
 class SBSocket extends events_1.Events {
     config;
     socket;
@@ -34,10 +35,10 @@ class SBSocket extends events_1.Events {
     connect() {
         this.purgeTimers();
         this.state = { connected: false, authed: false };
-        this.socket = new ws_1.default(`${this.config.socket?.endpoint}?${(0, querystring_1.stringify)({
-            shopid: this.config.botId,
+        this.socket = new ws_1.default(`${this.config.socket?.endpoint || constants_1.WS_ENDPOINT}?${(0, querystring_1.stringify)({
+            shopid: this.config.shopId,
             signature: crypto_1.default.createHash('md5')
-                .update(`${this.config.botId}${this.config.token}`)
+                .update(`${this.config.shopId}${this.config.token}`)
                 .digest('hex')
         })}`);
         this.socket.on('open', () => {
