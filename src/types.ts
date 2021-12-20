@@ -1,7 +1,7 @@
 export interface SBApiConfig {
 	readonly endpoint?: string;
 	readonly token: string;
-	readonly shopId: number;
+	readonly shopId: string;
 	readonly socket?: SBSocketConfig;
 }
 
