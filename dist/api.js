@@ -24,7 +24,7 @@ class SBApi {
         axios.interceptors.response.use(response => {
             const data = response.data;
             if ('status' in data && data.status === 'error')
-                throw new Error(JSON.stringify(data));
+                throw data;
             return data;
         });
         axios.interceptors.request.use(request => {
