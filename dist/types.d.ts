@@ -68,7 +68,7 @@ export interface BaseBuyPayload {
     readonly partner: string;
     readonly token: string;
     readonly max_price?: number;
-    readonly custom_id?: number;
+    readonly custom_id?: string;
 }
 export declare type BuyPayload = {
     readonly id: string;
