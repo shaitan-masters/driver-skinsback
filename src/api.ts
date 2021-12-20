@@ -43,6 +43,8 @@ export class SBApi {
 			if ('status' in data && data.status === 'error') throw data;
 			
 			return data;
+		}, (err) => {
+			throw err?.response?.data ?? err
 		});
 		axios.interceptors.request.use(request => {
 			request.data = this.buildParams({
