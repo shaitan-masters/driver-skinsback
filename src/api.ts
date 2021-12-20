@@ -17,6 +17,7 @@ import {
 	SearchResponse,
 	StatusResponse
 } from './types';
+import {SBApiError} from './error';
 import { DEFAULT_GAME, ENDPOINT } from './constants';
 
 
@@ -39,7 +40,7 @@ export class SBApi {
 		axios.defaults.baseURL = this.config.endpoint || ENDPOINT;
 		axios.interceptors.response.use(response => {
 			const data = response.data;
-			if ('status' in data && data.status === 'error') throw new Error(JSON.stringify(data));
+			if ('status' in data && data.status === 'error') throw data;
   
 			return data;
 		});
