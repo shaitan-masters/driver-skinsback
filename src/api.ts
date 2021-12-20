@@ -29,7 +29,7 @@ export class SBApi {
 
 	constructor(config: SBApiConfig) {
 		this.config = config;
-		this.http = this.configureAxios(axios);
+		this.http = this.configureAxios(axios.create());
 
 		if (this.config.socket) {
 			this.socket = new SBSocket(this.config);
@@ -41,7 +41,7 @@ export class SBApi {
 		axios.interceptors.response.use(response => {
 			const data = response.data;
 			if ('status' in data && data.status === 'error') throw data;
-  
+			
 			return data;
 		});
 		axios.interceptors.request.use(request => {

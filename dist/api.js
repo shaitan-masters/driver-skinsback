@@ -14,7 +14,7 @@ class SBApi {
     socket;
     constructor(config) {
         this.config = config;
-        this.http = this.configureAxios(axios_1.default);
+        this.http = this.configureAxios(axios_1.default.create());
         if (this.config.socket) {
             this.socket = new socket_1.SBSocket(this.config);
         }
